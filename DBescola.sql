@@ -129,6 +129,15 @@ CREATE PROCEDURE prAtualizarEstudante ( varProntuario char(7), varNome varchar(5
 		COMMIT;
 	END //
 DELIMITER ;
+DELIMITER //
+CREATE PROCEDURE prAtualizarDocente( varProntuario char(7), varNome varchar(50), varNascimento date, 
+					varEscolaridade enum("FUNDAMENTAL", "MEDIO", "TECNOLOGO", "BACHARELADO", "LICENCIATURA", "MESTRADO", "DOUTORADO", "POSGRADUACAO","LIVREDOCENCIA" ))
+	BEGIN
+		START TRANSACTION;
+			UPDATE tbldocente set strNome = varNome, dtNascimento = varNascimento, escolaridade = varEscolaridade  where prontuario = varProntuario;
+		COMMIT;
+	END //
+
 
 
 DELIMITER //
@@ -189,6 +198,39 @@ CREATE PROCEDURE prListarDocente()
 			SELECT dcCreated as "criado", dcModified as "modificado", strProntuario as "prontuario", strNome as "nome" , escolaridade, dtNascimento as "nascimento"   from tbldocente;
 		COMMIT ;
 	END//
+CREATE PROCEDURE prLerDocente(varProntuario char (7))
+	BEGIN
+		START TRANSACTION;
+			SELECT dbCreated as criado, dcModified as modificado, strProntuario as prontuario, nome as strNome, dtNascimento as nascimento from tbldocente where strProntuario = prontuario;
+		COMMIT ;
+		
+	END //
+CREATE PROCEDURE prAtualizarDisciplina(varSiglaAtual char(5), varSiglaNova char(5), varNome varchar(50)) 
+	BEGIN
+	START TRANSACTION;
+		UPDATE tbldisciplina set strSigla = varSiglaNova, strNome = varNome where varSiglaAtual = strSigla;
+	COMMIT ;
+END //
+
+CREATE PROCEDURE prLerDisciplina (varSigla char(5)) BEGIN
+	START TRANSACTION;
+		SELECT dcCreated as criado, dcModified as modificado, strSigla as sigla, strNome as nome from tbldisciplina where varSigla = strSigla;
+	COMMIT ;
+END //
+
+CREATE PROCEDURE prAtualizarTurma(varSigla char(5) , 
+				 strDiaAtual enum( "SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA", "SABADO"," DOMINGO") ,
+				 strPeriodoAtual enum("MATUTINO", "VESPERTINO", "NOTURNO") ,
+				 strDiaNovo enum( "SEGUNDA", "TERCA", "QUARTA", "QUINTA", "SEXTA", "SABADO"," DOMINGO"), 
+				 strPeriodoNovo enum("MATUTINO", "VESPERTINO", "NOTURNO"))
+	BEGIN
+	START TRANSACTION;
+		
+		
+	COMMIT ;
+END //
+-- EXPLAIN SELECT explica o select
+
 
 CREATE USER 'secretaria'@'localhost' IDENTIFIED BY 'senha';
 GRANT ALL ON dbEscola.* TO 'secretaria'@'localhost';
